@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+#
+# Launch emacs via a docker container
+#   Using: https://github.com/Silex/docker-emacs
+#
+{
+set -o errexit
+set -o nounset
+set -o pipefail
+
+OPTIND=1
+in_file="./"
+in_dir=$(pwd)
+
+show_help() {
+    echo "Usage: $0 [-h|-?] [file]"
+    echo "Where:"
+    echo "   'file': the file or dir to edit [default: current dir]"
+    exit 0
+}
+
+while getopts "h?" opt; do
+  case "$opt" in
+    h|\?) show_help ;;
+  esac
+done
+
+shift $((OPTIND-1))
+
+[ $# -gt 0 ] && [ "$1" = "--" ] && shift
+
+if [ $# -gt 0 ]; then
+    in_file=$(basename "$1")
+    in_dir="$( cd "$( dirname "$1" )" && pwd )"
+fi
+
+docker run --rm -ti \
+       --detach-keys="ctrl-o,d" \  # the default (ctrl-p) conflicts with emacs
+       -v "${in_dir}":/localhost \
+       -w /localhost \
+       silex/emacs emacs "${in_file}"
+}
