@@ -34,8 +34,10 @@ if [ $# -gt 0 ]; then
     in_dir="$( cd "$( dirname "$1" )" && pwd )"
 fi
 
+# Note: the default detach key (ctrl-p) conflicts with emacs,
+#       so we change it to ctrl-o,d
 docker run --rm -ti \
-       --detach-keys="ctrl-o,d" \  # the default (ctrl-p) conflicts with emacs
+       --detach-keys="ctrl-o,d" \
        -v "${in_dir}":/localhost \
        -w /localhost \
        silex/emacs emacs "${in_file}"
