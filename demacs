@@ -38,7 +38,7 @@ fi
 #       so we change it to ctrl-o,d
 docker run --rm -ti \
        --detach-keys="ctrl-o,d" \
-       -v "${in_dir}":/localhost \
+       -v "${in_dir}":/localhost -v "${HOME}/.emacs.d":/root/.emacs.d \
        -w /localhost \
        silex/emacs emacs "${in_file}"
 }
